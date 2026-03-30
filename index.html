@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IMAXIA — Audiovisual · Logística · Publicidad</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  *, *::before, *::after {
+    transition: background-color 0.35s ease, border-color 0.35s ease, color 0.2s ease;
+  }
+
+  /* Excluir elementos donde la transición se ve rara */
+  .theme-toggle::before, .reveal, nav, .btn-primary, .btn-ghost, .nav-cta {
+    transition: all 0.35s ease;
+  }
+
+  :root {
+    /* =============================================
+       PALETA GLOBAL — IMAXIA
+       Cambia solo este bloque para modificar todo el sitio
+       ============================================= */
+
+    /* Colores de acento */
+    --color-accent-1:      #E85D00;   /* Naranja → botones, highlights    */
+    --color-accent-1-dim:  #C44D00;   /* Naranja oscuro → hover, gradiente */
+    --color-accent-2:      #1251CC;   /* Azul → acentos secundarios       */
+    --color-accent-2-dim:  #0A3A99;   /* Azul oscuro → hover, gradiente   */
+    --color-accent-3:      #C41414;   /* Rojo → tercer acento             */
+    --color-accent-4:      #16A34A;   /* Verde → servicio web             */
+    --color-accent-4b:     #0891B2;   /* Cian → gradiente web             */
+
+    /* Canales RGB — para usar en rgba() */
+    --rgb-accent-1:        232, 93, 0;
+    --rgb-accent-2:        18, 81, 204;
+    --rgb-accent-3:        196, 20, 20;
+    --rgb-accent-4:        22, 163, 74;
+    --rgb-white:           255, 255, 255;
+    --rgb-bg:              248, 247, 244;
+
+    /* Fondos */
+    --color-bg:            #F8F7F4;   /* Fondo base → body                */
+    --color-bg-2:          #EEECEA;   /* Fondo medio → secciones alternas */
+    --color-bg-3:          #FFFFFF;   /* Fondo tarjetas → cards, inputs   */
+
+    /* Tipografía */
+    --color-text:          #1A1A1A;   /* Texto principal                  */
+    --color-text-muted:    #6B6F7A;   /* Texto secundario                 */
+    --color-silver:        #3A3D46;   /* → títulos secundarios            */
+    --color-silver-light:  #111318;   /* → headings principales           */
+
+    /* Bordes */
+    --color-border:        rgba(0, 0, 0, 0.08);
+
+    /* =============================================
+       ALIASES internos — no modificar
+       Conectan el bloque de arriba con el CSS
+       ============================================= */
+    --orange:       var(--color-accent-1);
+    --orange-dim:   var(--color-accent-1-dim);
+    --blue:         var(--color-accent-2);
+    --blue-dim:     var(--color-accent-2-dim);
+    --red:          var(--color-accent-3);
+    --green:        var(--color-accent-4);
+    --cyan:         var(--color-accent-4b);
+    --silver:       var(--color-silver);
+    --silver-light: var(--color-silver-light);
+    --bg:           var(--color-bg);
+    --bg2:          var(--color-bg-2);
+    --bg3:          var(--color-bg-3);
+    --text:         var(--color-text);
+    --muted:        var(--color-text-muted);
+    --border:       var(--color-border);
+  }
+
+  /* =============================================
+     TEMA OSCURO — clase .dark en <html>
+     ============================================= */
+  html.dark {
+    --color-accent-1:      #FF6A00;
+    --color-accent-1-dim:  #CC5500;
+    --color-accent-2:      #1A6EFF;
+    --color-accent-2-dim:  #0D4AB5;
+    --color-accent-3:      #E01A1A;
+    --color-accent-4:      #22C55E;
+    --color-accent-4b:     #06B6D4;
+
+    --rgb-accent-1:        255, 106, 0;
+    --rgb-accent-2:        26, 110, 255;
+    --rgb-accent-3:        224, 26, 26;
+    --rgb-accent-4:        34, 197, 94;
+    --rgb-white:           255, 255, 255;
+    --rgb-bg:              8, 10, 13;
+
+    --color-bg:            #080A0D;
+    --color-bg-2:          #0D1017;
+    --color-bg-3:          #111620;
+
+    --color-text:          #E8ECF2;
+    --color-text-muted:    #7A8296;
+    --color-silver:        #C8CDD6;
+    --color-silver-light:  #E8ECF2;
+
+    --color-border:        rgba(255, 255, 255, 0.06);
+  }
+
+  /* THEME TOGGLE BUTTON */
+  .theme-toggle {
+    width: 44px;
+    height: 24px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--color-bg-3);
+    cursor: pointer;
+    position: relative;
+    transition: background 0.35s, border-color 0.35s;
+    flex-shrink: 0;
+    outline: none;
+    margin-right: 1rem;
+  }
+
+  .theme-toggle::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-accent-1);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.35s;
+  }
+
+  html.dark .theme-toggle::before {
+    transform: translateX(20px);
+  }
+
+  .theme-toggle .t-icon {
+    position: absolute;
+    font-size: 9px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: opacity 0.25s;
+    line-height: 1;
+  }
+
+  .theme-toggle .t-sun  { left: 5px;  opacity: 1; }
+  .theme-toggle .t-moon { right: 4px; opacity: 0; }
+
+  html.dark .theme-toggle .t-sun  { opacity: 0; }
+  html.dark .theme-toggle .t-moon { opacity: 1; }
+
+  html { scroll-behavior: smooth; transition: background 0.35s; }
+
+  body {
+    font-family: 'Exo 2', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(var(--rgb-bg),0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    background: linear-gradient(90deg, var(--color-silver-light), var(--color-silver));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .nav-logo span {
+    background: linear-gradient(135deg, var(--orange), var(--red), var(--blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--orange); }
+
+  .nav-cta {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: linear-gradient(135deg, var(--orange), var(--orange-dim));
+    border: none;
+    padding: 0.6rem 1.4rem;
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    cursor: pointer;
+    transition: opacity 0.3s;
+    text-decoration: none;
+  }
+
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 8rem 4rem 4rem;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 50%, rgba(var(--rgb-accent-1),0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 40%, rgba(var(--rgb-accent-2),0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 50% 80%, rgba(var(--rgb-accent-3),0.05) 0%, transparent 70%);
+  }
+
+  /* Diagonal accent lines */
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 15%;
+    width: 2px;
+    height: 45%;
+    background: linear-gradient(180deg, transparent, var(--orange) 40%, transparent);
+    transform: rotate(-20deg);
+    opacity: 0.6;
+  }
+
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    right: 20%;
+    width: 1.5px;
+    height: 50%;
+    background: linear-gradient(180deg, transparent, var(--blue) 50%, transparent);
+    transform: rotate(15deg);
+    opacity: 0.5;
+  }
+
+  .hero-content {
+    text-align: center;
+    z-index: 1;
+    max-width: 900px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--orange);
+    border: 1px solid rgba(var(--rgb-accent-1),0.3);
+    padding: 0.4rem 1rem;
+    clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+    margin-bottom: 2rem;
+    background: rgba(var(--rgb-accent-1),0.05);
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--orange);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .hero h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(4rem, 10vw, 9rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 .main {
+    display: block;
+    background: linear-gradient(135deg, var(--color-silver-light) 30%, var(--color-silver) 70%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero h1 .accent {
+    display: block;
+    background: linear-gradient(135deg, var(--orange), var(--red) 40%, var(--blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 0.4em;
+    letter-spacing: 0.25em;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: linear-gradient(135deg, var(--orange), var(--orange-dim));
+    border: none;
+    padding: 0.9rem 2.2rem;
+    clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+    cursor: pointer;
+    transition: opacity 0.3s, transform 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+
+  .btn-ghost {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--silver);
+    background: transparent;
+    border: 1px solid rgba(var(--rgb-white),0.12);
+    padding: 0.9rem 2.2rem;
+    clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+    cursor: pointer;
+    transition: border-color 0.3s, color 0.3s, transform 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-ghost:hover { border-color: var(--color-silver); color: var(--color-silver-light); transform: translateY(-2px); }
+
+  /* STATS STRIP */
+  .stats {
+    background: var(--bg2);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    padding: 2rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: 1rem 2rem;
+    border-right: 0.5px solid var(--border);
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--orange), var(--red));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+
+  /* SECTION BASE */
+  section { padding: 7rem 4rem; }
+
+  .section-tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-tag::before {
+    content: '';
+    width: 24px;
+    height: 1.5px;
+    background: var(--orange);
+  }
+
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--silver-light);
+  }
+
+  .section-title em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--orange), var(--red), var(--blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ABOUT — MISIÓN Y VISIÓN */
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .about-text p {
+    font-size: 1.05rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-top: 1.5rem;
+  }
+
+  .mv-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .mv-card {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-left: 3px solid;
+    padding: 1.75rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .mv-card.mission { border-left-color: var(--orange); }
+  .mv-card.vision { border-left-color: var(--blue); }
+
+  .mv-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px;
+    height: 80px;
+    opacity: 0.04;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 5rem;
+    font-weight: 700;
+  }
+
+  .mv-card .mv-icon {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .mv-card.mission .mv-icon { color: var(--orange); }
+  .mv-card.vision .mv-icon { color: var(--blue); }
+
+  .mv-card h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--silver-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .mv-card p {
+    font-size: 0.92rem;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  /* SERVICES */
+  #servicios { background: var(--bg2); }
+
+  .services-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 5rem;
+  }
+
+  .services-header .section-tag { justify-content: center; }
+  .services-header .section-tag::before { display: none; }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5px;
+    max-width: 1300px;
+    margin: 0 auto;
+    background: var(--border);
+  }
+
+  .service-card {
+    background: var(--bg2);
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+    cursor: default;
+  }
+
+  .service-card:hover { background: var(--bg3); }
+
+  .service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .service-card:hover::after { opacity: 1; }
+
+  .service-card.av::after { background: linear-gradient(90deg, var(--orange), var(--red)); }
+  .service-card.pub::after { background: linear-gradient(90deg, var(--red), var(--blue)); }
+  .service-card.log::after { background: linear-gradient(90deg, var(--blue), var(--blue-dim)); }
+  .service-card.web::after { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+
+  .service-num {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0.06;
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    color: #fff;
+  }
+
+  .service-icon {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 1.75rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .service-card h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--silver-light);
+    margin-bottom: 1rem;
+  }
+
+  .service-card p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+  }
+
+  .service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .service-tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border: 0.5px solid var(--border);
+    color: var(--muted);
+    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+    background: rgba(255,255,255,0.02);
+  }
+
+  .service-card.av .service-tag { border-color: rgba(var(--rgb-accent-1),0.2); color: rgba(var(--rgb-accent-1),0.7); }
+  .service-card.pub .service-tag { border-color: rgba(var(--rgb-accent-3),0.2); color: rgba(var(--rgb-accent-3),0.7); }
+  .service-card.log .service-tag { border-color: rgba(var(--rgb-accent-2),0.2); color: rgba(var(--rgb-accent-2),0.7); }
+  .service-card.web .service-tag { border-color: rgba(var(--rgb-accent-4),0.2); color: rgba(var(--rgb-accent-4),0.7); }
+
+  /* WHY US */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    max-width: 1300px;
+    margin: 3rem auto 0;
+  }
+
+  .why-item {
+    border-top: 1px solid var(--border);
+    padding-top: 1.75rem;
+  }
+
+  .why-item .why-num {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--orange);
+    margin-bottom: 1rem;
+  }
+
+  .why-item h4 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--silver-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .why-item p {
+    font-size: 0.87rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* SOCIAL / CONTACT */
+  #contacto {
+    background: var(--bg2);
+    border-top: 0.5px solid var(--border);
+  }
+
+  .contact-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .social-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.1rem 1.5rem;
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    text-decoration: none;
+    transition: border-color 0.3s, background 0.3s;
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  }
+
+  .social-link:hover { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); }
+
+  .social-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .social-info .s-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--silver-light);
+    letter-spacing: 0.05em;
+  }
+
+  .social-info .s-handle {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 0.1rem;
+  }
+
+  .social-link .s-arrow {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 1.1rem;
+    transition: transform 0.3s, color 0.3s;
+  }
+
+  .social-link:hover .s-arrow { transform: translateX(4px); color: var(--orange); }
+
+  /* CONTACT FORM */
+  .contact-form { margin-top: 2.5rem; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-group label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.85rem 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    resize: none;
+    clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus { border-color: var(--orange); }
+
+  .form-group select option { background: var(--bg3); }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg);
+    border-top: 0.5px solid var(--border);
+    padding: 2.5rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-logo {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    background: linear-gradient(90deg, var(--silver-light), var(--silver));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .footer-logo span {
+    background: linear-gradient(135deg, var(--orange), var(--red), var(--blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-links a {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--orange); }
+
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 5rem 1.5rem; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+    .stats { grid-template-columns: repeat(2, 1fr); padding: 1.5rem; }
+    .stat-item:nth-child(2) { border-right: none; }
+    .about { grid-template-columns: 1fr; gap: 3rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">IMA<span>X</span>IA</div>
+  <ul class="nav-links">
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:0.5rem;">
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema" aria-label="Cambiar tema claro/oscuro">
+      <span class="t-icon t-sun">☀</span>
+      <span class="t-icon t-moon">☽</span>
+    </button>
+    <a href="#contacto" class="nav-cta">Cotizar proyecto</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content reveal">
+    <div class="hero-badge">Agencia integral de comunicación</div>
+    <h1>
+      <span class="main">IMAXIA</span>
+      <span class="accent">Audiovisual · Logística · Publicidad</span>
+    </h1>
+    <p class="hero-sub">
+      Convertimos tu visión en experiencias visuales poderosas. Producción audiovisual, estrategias de publicidad y logística de eventos que marcan la diferencia.
+    </p>
+    <div class="hero-ctas">
+      <a href="#servicios" class="btn-primary">Ver servicios</a>
+      <a href="#contacto" class="btn-ghost">Hablar con nosotros</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item reveal">
+    <div class="stat-num">+5</div>
+    <div class="stat-label">Años de experiencia</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num">+120</div>
+    <div class="stat-label">Proyectos entregados</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num">+80</div>
+    <div class="stat-label">Clientes satisfechos</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num">3</div>
+    <div class="stat-label">Verticales de servicio</div>
+  </div>
+</div>
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="about">
+    <div class="about-text reveal">
+      <div class="section-tag">Quiénes somos</div>
+      <h2 class="section-title">Creatividad y precisión<br>en cada <em>proyecto</em></h2>
+      <p>
+        IMAXIA nació para cubrir tres mundos que se complementan: la narrativa visual, la comunicación estratégica y la ejecución logística impecable. Somos el aliado creativo que hace que tus ideas cobren vida.
+      </p>
+      <p>
+        Trabajamos con marcas, empresas, emprendedores y artistas que quieren destacar. Desde una campaña de redes hasta la producción completa de un evento, somos tu equipo.
+      </p>
+    </div>
+    <div class="mv-cards">
+      <div class="mv-card mission reveal">
+        <div class="mv-icon">— Misión</div>
+        <h3>Nuestra Misión</h3>
+        <p>
+          Brindar soluciones creativas e integrales en producción audiovisual, publicidad y logística, generando experiencias visuales de alto impacto que conecten a las marcas con su audiencia de manera auténtica y memorable.
+        </p>
+      </div>
+      <div class="mv-card vision reveal">
+        <div class="mv-icon">— Visión</div>
+        <h3>Nuestra Visión</h3>
+        <p>
+          Ser la agencia referente de comunicación visual en la región, reconocida por la calidad de nuestras producciones, la creatividad de nuestras estrategias y la confiabilidad en cada proceso logístico.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="services-header reveal">
+    <div class="section-tag">Lo que hacemos</div>
+    <h2 class="section-title">Nuestros <em>Servicios</em></h2>
+    <p style="color:var(--muted);margin-top:1rem;font-size:0.95rem;line-height:1.7;">
+      Tres áreas especializadas, un solo equipo comprometido con la excelencia.
+    </p>
+  </div>
+
+  <div class="services-grid">
+    <!-- Audiovisual -->
+    <div class="service-card av reveal">
+      <div class="service-num">01</div>
+      <svg class="service-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="10" width="36" height="28" rx="2" style="stroke:var(--color-accent-1)" stroke-width="1.5"/>
+        <path d="M38 19l12-8v30l-12-8V19z" style="stroke:var(--color-accent-1)" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="20" cy="24" r="5" style="stroke:var(--color-accent-1)" stroke-width="1.5"/>
+        <path d="M8 36L16 24l6 8 4-5 8 9" style="stroke:var(--color-accent-1)" stroke-width="1.5" stroke-linejoin="round" opacity="0.5"/>
+      </svg>
+      <h3>Producción Audiovisual</h3>
+      <p>Creamos contenido visual de alto impacto: videos corporativos, spots publicitarios, documentales, transmisiones en vivo y contenido para redes sociales que cuentan historias que enganchan.</p>
+      <div class="service-tags">
+        <span class="service-tag">Video corporativo</span>
+        <span class="service-tag">Spots publicitarios</span>
+        <span class="service-tag">Livestreaming</span>
+        <span class="service-tag">Motion graphics</span>
+        <span class="service-tag">Fotografía</span>
+      </div>
+    </div>
+
+    <!-- Publicidad -->
+    <div class="service-card pub reveal">
+      <div class="service-num">02</div>
+      <svg class="service-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 26C6 15 15 6 26 6s20 9 20 20-9 20-20 20S6 37 6 26z" style="stroke:var(--color-accent-3)" stroke-width="1.5"/>
+        <path d="M26 6v40M6 26h40" style="stroke:var(--color-accent-3)" stroke-width="1" opacity="0.3"/>
+        <path d="M12 14c3 3 8 5 14 5s11-2 14-5M12 38c3-3 8-5 14-5s11 2 14 5" style="stroke:var(--color-accent-3)" stroke-width="1" opacity="0.4"/>
+        <circle cx="26" cy="26" r="5" style="fill:var(--color-accent-3);stroke:var(--color-accent-3)" opacity="0.2" stroke-width="1.5"/>
+      </svg>
+      <h3>Publicidad Digital</h3>
+      <p>Estrategias creativas para posicionar tu marca. Diseño gráfico, identidad visual, campañas digitales, gestión de redes sociales y piezas publicitarias que generan resultados reales.</p>
+      <div class="service-tags">
+        <span class="service-tag">Diseño gráfico</span>
+        <span class="service-tag">Branding</span>
+        <span class="service-tag">Redes sociales</span>
+        <span class="service-tag">Campañas digitales</span>
+        <span class="service-tag">Piezas impresas</span>
+      </div>
+    </div>
+
+    <!-- Logística -->
+    <div class="service-card log reveal">
+      <div class="service-num">03</div>
+      <svg class="service-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="16" width="32" height="22" rx="2" style="stroke:var(--color-accent-2)" stroke-width="1.5"/>
+        <path d="M36 20h6l6 8v8h-12V20z" style="stroke:var(--color-accent-2)" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="14" cy="41" r="4" style="stroke:var(--color-accent-2)" stroke-width="1.5"/>
+        <circle cx="40" cy="41" r="4" style="stroke:var(--color-accent-2)" stroke-width="1.5"/>
+        <path d="M8 16V10h20v6" style="stroke:var(--color-accent-2)" stroke-width="1" opacity="0.4"/>
+        <path d="M4 28h32" style="stroke:var(--color-accent-2)" stroke-width="1" opacity="0.3"/>
+      </svg>
+      <h3>Logística de Eventos</h3>
+      <p>Planificamos y ejecutamos eventos corporativos, lanzamientos, activaciones de marca y producciones en vivo con precisión milimétrica. Del concepto a la realidad, sin contratiempos.</p>
+      <div class="service-tags">
+        <span class="service-tag">Eventos corporativos</span>
+        <span class="service-tag">Activaciones</span>
+        <span class="service-tag">Montaje y desmontaje</span>
+        <span class="service-tag">Coordinación técnica</span>
+      </div>
+    </div>
+    <!-- Desarrollo Web -->
+    <div class="service-card web reveal">
+      <div class="service-num">04</div>
+      <svg class="service-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="8" width="44" height="32" rx="3" style="stroke:var(--color-accent-4)" stroke-width="1.5"/>
+        <path d="M4 16h44" style="stroke:var(--color-accent-4)" stroke-width="1" opacity="0.4"/>
+        <circle cx="11" cy="12" r="1.5" style="fill:var(--color-accent-4)" opacity="0.6"/>
+        <circle cx="17" cy="12" r="1.5" style="fill:var(--color-accent-4)" opacity="0.4"/>
+        <circle cx="23" cy="12" r="1.5" style="fill:var(--color-accent-4)" opacity="0.2"/>
+        <path d="M18 26l-5 4 5 4" style="stroke:var(--color-accent-4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M26 22l-4 16" style="stroke:var(--color-accent-4b)" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+        <path d="M34 26l5 4-5 4" style="stroke:var(--color-accent-4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="16" y="44" width="20" height="4" rx="1" style="stroke:var(--color-accent-4)" stroke-width="1" opacity="0.3"/>
+        <rect x="22" y="40" width="8" height="4" style="fill:var(--color-accent-4);stroke:var(--color-accent-4)" opacity="0.1" stroke-width="1"/>
+      </svg>
+      <h3>Desarrollo Web y E-commerce</h3>
+      <p>Diseñamos y desarrollamos sitios web modernos, rápidos y orientados a resultados. Desde landing pages hasta tiendas en línea completas con pasarelas de pago, gestión de inventario y experiencia de usuario optimizada para convertir.</p>
+      <div class="service-tags">
+        <span class="service-tag">Sitios web</span>
+        <span class="service-tag">E-commerce</span>
+        <span class="service-tag">Landing pages</span>
+        <span class="service-tag">Tiendas en línea</span>
+        <span class="service-tag">UX / UI</span>
+        <span class="service-tag">SEO técnico</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- POR QUÉ NOSOTROS -->
+<section id="por-que">
+  <div style="max-width:1300px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:1rem;">
+      <div class="section-tag" style="justify-content:center;"><span style="width:24px;height:1.5px;background:var(--orange);"></span> Por qué elegirnos</div>
+      <h2 class="section-title">Lo que nos hace <em>diferentes</em></h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-item reveal">
+        <div class="why-num">01 —</div>
+        <h4>Equipo multidisciplinar</h4>
+        <p>Directores, diseñadores, técnicos y estrategas trabajando en sincronía para entregar resultados superiores.</p>
+      </div>
+      <div class="why-item reveal">
+        <div class="why-num">02 —</div>
+        <h4>Enfoque integral</h4>
+        <p>Cubrimos desde la idea hasta la ejecución. Un solo aliado para tus necesidades visuales, creativas y logísticas.</p>
+      </div>
+      <div class="why-item reveal">
+        <div class="why-num">03 —</div>
+        <h4>Entrega a tiempo</h4>
+        <p>Los plazos son sagrados. Gestionamos proyectos con metodologías probadas que garantizan puntualidad.</p>
+      </div>
+      <div class="why-item reveal">
+        <div class="why-num">04 —</div>
+        <h4>Calidad sin compromiso</h4>
+        <p>Equipos de última generación y estándares de producción que compiten con cualquier mercado.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO Y REDES -->
+<section id="contacto">
+  <div class="contact-inner">
+    <div class="reveal">
+      <div class="section-tag">Encuéntranos</div>
+      <h2 class="section-title">Síguenos y<br><em>conéctate</em></h2>
+      <p style="color:var(--muted);margin-top:1rem;font-size:0.9rem;line-height:1.75;">
+        Mantente al día con nuestros proyectos, detrás de cámaras y novedades en nuestras redes sociales.
+      </p>
+      <div class="social-grid">
+
+        <a href="https://instagram.com/imaxia" target="_blank" class="social-link">
+          <div class="social-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig)" stroke-width="1.5"/>
+              <circle cx="12" cy="12" r="5" stroke="url(#ig)" stroke-width="1.5"/>
+              <circle cx="17.5" cy="6.5" r="1" style="fill:var(--color-accent-3)"/>
+              <defs>
+                <linearGradient id="ig" x1="2" y1="2" x2="22" y2="22">
+                  <stop style="stop-color:var(--color-accent-1)"/>
+                  <stop offset="0.5" style="stop-color:var(--color-accent-3)"/>
+                  <stop offset="1" stop-color="#8B5CF6"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="social-info">
+            <div class="s-name">Instagram</div>
+            <div class="s-handle">@imaxia</div>
+          </div>
+          <span class="s-arrow">→</span>
+        </a>
+
+        <a href="https://facebook.com/imaxia" target="_blank" class="social-link">
+          <div class="social-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="2" width="20" height="20" rx="5" style="stroke:var(--color-accent-2)" stroke-width="1.5"/>
+              <path d="M15 8h-2a1 1 0 0 0-1 1v2h3l-.5 3H12v6H9v-6H7v-3h2V9a4 4 0 0 1 4-4h2v3z" style="stroke:var(--color-accent-2)" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="social-info">
+            <div class="s-name">Facebook</div>
+            <div class="s-handle">/imaxia</div>
+          </div>
+          <span class="s-arrow">→</span>
+        </a>
+
+        <a href="https://tiktok.com/@imaxia" target="_blank" class="social-link">
+          <div class="social-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="2" width="20" height="20" rx="5" stroke="var(--silver)" stroke-width="1.5" opacity="0.4"/>
+              <path d="M15 3c0 2 1 3.5 3 4v2.5c-1 0-2-.3-3-1V15a5 5 0 1 1-5-5v2.5a2.5 2.5 0 1 0 2.5 2.5V3H15z" stroke="var(--silver-light)" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="social-info">
+            <div class="s-name">TikTok</div>
+            <div class="s-handle">@imaxia</div>
+          </div>
+          <span class="s-arrow">→</span>
+        </a>
+
+        <a href="https://wa.me/573000000000" target="_blank" class="social-link">
+          <div class="social-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" style="stroke:var(--color-accent-4)" stroke-width="1.5"/>
+              <path d="M17 14.5c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.1-1.4-2.7-1.6-4.3-4.2-4.4-4.4-.1-.2-1-1.3-1-2.5s.7-1.8.9-2c.2-.2.5-.3.7-.3.1 0 .3 0 .4.001.3.001.4.002.6.5.2.5.7 1.8.8 2 .1.1.1.3 0 .4-.1.1-.1.2-.3.4-.1.2-.3.3-.4.5-.1.2 0 .4.1.5.3.5.8 1.1 1.4 1.6.7.6 1.3.8 1.5.9.2.1.4.1.5-.1.2-.2.6-.7.8-.9.2-.2.4-.2.6-.1l2 .9c.2.1.4.2.4.4z" style="fill:var(--color-accent-4)" opacity="0.8"/>
+            </svg>
+          </div>
+          <div class="social-info">
+            <div class="s-name">WhatsApp</div>
+            <div class="s-handle">Escríbenos directamente</div>
+          </div>
+          <span class="s-arrow">→</span>
+        </a>
+
+        <a href="https://youtube.com/@imaxia" target="_blank" class="social-link">
+          <div class="social-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="5" width="20" height="14" rx="4" style="stroke:var(--color-accent-3)" stroke-width="1.5"/>
+              <path d="M10 9l6 3-6 3V9z" style="fill:var(--color-accent-3)"/>
+            </svg>
+          </div>
+          <div class="social-info">
+            <div class="s-name">YouTube</div>
+            <div class="s-handle">IMAXIA Channel</div>
+          </div>
+          <span class="s-arrow">→</span>
+        </a>
+
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="section-tag">Contáctanos</div>
+      <h2 class="section-title">Hablemos de<br>tu <em>proyecto</em></h2>
+      <div class="contact-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" placeholder="Tu nombre">
+          </div>
+          <div class="form-group">
+            <label>Empresa</label>
+            <input type="text" placeholder="Nombre de tu empresa">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" placeholder="correo@empresa.com">
+        </div>
+        <div class="form-group">
+          <label>Servicio de interés</label>
+          <select>
+            <option value="" disabled selected>Selecciona un servicio</option>
+            <option>Producción Audiovisual</option>
+            <option>Publicidad Digital</option>
+            <option>Logística de Eventos</option>
+            <option>Desarrollo Web / E-commerce</option>
+            <option>Paquete integral</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Cuéntanos tu proyecto</label>
+          <textarea rows="4" placeholder="Describe brevemente lo que necesitas..."></textarea>
+        </div>
+        <button class="btn-primary" style="width:100%;text-align:center;" onclick="alert('¡Gracias! Nos pondremos en contacto pronto.')">Enviar mensaje →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">IMA<span>X</span>IA</div>
+  <div class="footer-copy">© 2025 IMAXIA. Todos los derechos reservados.</div>
+  <div class="footer-links">
+    <a href="#nosotros">Nosotros</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+</footer>
+
+<script>
+  // --- THEME TOGGLE ---
+  const html = document.documentElement;
+  const btn  = document.getElementById('themeToggle');
+
+  // Aplica el tema guardado (o el preferido del sistema)
+  const saved = localStorage.getItem('imaxia-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (saved === 'dark' || (!saved && prefersDark)) {
+    html.classList.add('dark');
+  }
+
+  btn.addEventListener('click', () => {
+    html.classList.toggle('dark');
+    localStorage.setItem('imaxia-theme', html.classList.contains('dark') ? 'dark' : 'light');
+  });
+
+  // --- SCROLL REVEAL ---
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
