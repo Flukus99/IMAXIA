@@ -1259,10 +1259,9 @@
   const html = document.documentElement;
   const btn  = document.getElementById('themeToggle');
 
-  // Aplica el tema guardado (o el preferido del sistema)
+  // Siempre inicia en claro — solo cambia a oscuro si el usuario lo eligió
   const saved = localStorage.getItem('imaxia-theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (saved === 'dark' || (!saved && prefersDark)) {
+  if (saved === 'dark') {
     html.classList.add('dark');
   }
 
